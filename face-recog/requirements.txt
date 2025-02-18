@@ -1,0 +1,7 @@
+cx_Oracle
+numpy
+scipy
+Pillow
+scikit-build
+opencv-python
+face_recognition

@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: face-recog
+      dockerfile: Dockerfile
+    container_name: face_recognition_app
+    devices:
+      - /dev/video2:/dev/video0
+    environment:
+      - DISPLAY=:0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+  db:
+    build: 
+      context: database
+      dockerfile: Dockerfile
+    container_name: oracle_db
+    ports:
+      - "1521:1521"

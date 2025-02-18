@@ -1,0 +1,33 @@
+# FROM nvidia/cuda:12.8.0-base-oraclelinux9 -- not supported on my desktop
+FROM nvidia/cuda:12.2.2-base-rockylinux9
+
+# Install Oracle Instant Client
+RUN  dnf -y install oracle-instantclient-release-23ai-el9 && \
+     dnf -y install oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus && \
+     rm -rf /var/cache/dnf
+
+# Install dependencies
+RUN yum install -y \
+    python3 \
+    python3-pip \
+    python3-devel \
+    cmake \
+    g++ \
+    wget \
+    unzip \
+    mesa-libGL
+
+# Copy the requirements file
+COPY requirements.txt .
+
+# Install the python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+RUN mkdir /app
+COPY src/ /app
+WORKDIR /app
+
+# Run the application
+# CMD ["find","-name","dlib_face_recognition_resnet_model_v1.dat"]
+CMD ["python3", "/app/capture.py"]
