@@ -43,7 +43,7 @@ class Database:
         cursor = self.connection.cursor()
         try:
             # Cosine Distance varies from 0 to 2, where 0 means the vectors are identical and 2 means they are opposite
-            result = ""
+            result = None
             cursor.execute(""" 
                 SELECT face_name FROM faces 
                 WHERE VECTOR_DISTANCE(face_vector, :parameter_vector, COSINE) <= :distance_threshold
@@ -58,7 +58,7 @@ class Database:
         finally:
             cursor.close()
 
-    # returns n (how_many) faces (id, image, name) from the database
+    # returns n (how_many) faces (id, name, image) from the database
     def faces_from_database(self, how_many):
         if self.connection is None:
             print("Database connection is not established.")
@@ -71,7 +71,7 @@ class Database:
             faces = []
             for row in rows:
                 # face = (row[0], pickle.loads(row[1]), row[2])
-                face = (row[0], row[2])
+                face = (row[0], row[2], pickle.loads(row[1].read()))
                 faces.append(face)
             return faces      
         except cx_Oracle.DatabaseError as e:
@@ -91,6 +91,35 @@ class Database:
             print(f"Error inserting face: {e}")
         finally:
             cursor.close()
+
+    def update_face_name(self, face_id, new_name):
+        if self.connection is None:
+            print("Database connection is not established.")
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(
+                "UPDATE faces SET face_name = :1 WHERE id = :2", [new_name, face_id])
+            self.connection.commit()
+            print(f"Face name updated successfully.")
+        except cx_Oracle.DatabaseError as e:
+            print(f"Error updating face name: {e}")
+        finally:
+            cursor.close()
+
+    def delete_face(self, face_id):
+        if self.connection is None:
+            print("Database connection is not established.")
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute("DELETE FROM faces WHERE id = :1", [face_id])
+            self.connection.commit()
+            print(f"Face deleted successfully.")
+        except cx_Oracle.DatabaseError as e:
+            print(f"Error deleting face: {e}")
+        finally:
+            cursor
 
     def close(self):
         if self.connection:
