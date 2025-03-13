@@ -32,6 +32,9 @@ WORKDIR /app
 # Run the application
 CMD ["python3", "/app/capture.py"]
 
+# Run the application with profiling
+# CMD ["python3", "-m", "cProfile", "-s", "time", "/app/capture.py"]
+
 
 # FOR DEBUG
 # Install required packages for video support

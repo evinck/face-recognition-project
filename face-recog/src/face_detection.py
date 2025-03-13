@@ -10,18 +10,22 @@ face_rec_model = dlib.face_recognition_model_v1(face_rec_model_path)
 shape_predictor_path = "models/shape_predictor_68_face_landmarks.dat"
 shape_predictor = dlib.shape_predictor(shape_predictor_path)
 
+# Load the Dlib HOG face detector
+hog_face_detector = dlib.get_frontal_face_detector()
+
 # returns a list of tuples containing the face image, face rectangle and face vector
 def detect_faces(frame):
-    # face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray_frame, scaleFactor=1.1, minNeighbors=5)
-
+    
+    # Use the Dlib HOG face detector
+    detections = hog_face_detector(gray_frame, 1)
+    
     faces_set = []
-    for (x, y, w, h) in faces:
+    for detection in detections:
+        x, y, w, h = (detection.left(), detection.top(), detection.width(), detection.height())
         face = frame[y:y+h, x:x+w]
         face_vector = extract_features(frame, (x, y, w, h))
-        faces_set.append((face,(x,y,w,h), face_vector))
+        faces_set.append((face, (x, y, w, h), face_vector))
 
     return faces_set
 

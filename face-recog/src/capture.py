@@ -58,7 +58,7 @@ def main():
 
         # Display the frame with detected faces
         cv2.imshow('Video Stream', frame)
-        cv2.waitKey(2)
+        cv2.waitKey(1)
 
         frame = None
 
