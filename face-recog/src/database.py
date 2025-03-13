@@ -26,7 +26,7 @@ class Database:
         cursor = self.connection.cursor()
         try:
             cursor.execute(
-                "INSERT INTO faces (face_image, face_name, face_vector) VALUES (:1, :2, :3)", [pickle.dumps(face[0]), "Unkown", str(face[2].tolist())])
+                "INSERT INTO faces (face_image, face_name, face_vector) VALUES (:1, :2, :3)", [pickle.dumps(face[0]), "Unknown", str(face[2].tolist())])
             self.connection.commit()
             print("Face inserted successfully.")
         except cx_Oracle.DatabaseError as e:

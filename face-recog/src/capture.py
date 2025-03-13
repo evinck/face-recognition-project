@@ -53,8 +53,12 @@ def main():
                 # print("Face already in database - ", face_name)
                 # Draw rectangles around detected face and write the name of the person
                 x, y, w, h = face[1]
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
-                cv2.putText(frame, face_name, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (36,255,12), 2)
+                if face_name == "Unknown":
+                    pen_color = (0, 0, 255)
+                else:
+                    pen_color = (36,255,12)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), pen_color, 2)
+                cv2.putText(frame, face_name, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, pen_color, 2)
 
         # Display the frame with detected faces
         cv2.imshow('Video Stream', frame)
