@@ -45,7 +45,7 @@ def main():
 
         # Insert face into database if needed
         for face in faces:
-            face_name=database.face_is_in_database2(face)
+            face_name=database.face_is_in_database(face)
             if face_name is None:
                  # print("New face detected - inserting into database") 
                  database.insert_face_in_database(face)

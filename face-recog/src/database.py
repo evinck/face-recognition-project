@@ -35,7 +35,7 @@ class Database:
             cursor.close()
 
     # returns the name of the face if it is in the database, otherwise returns an empty string
-    def face_is_in_database2(self, face):
+    def face_is_in_database(self, face):
         if self.connection is None:
             print("Database connection is not established.")
             return False

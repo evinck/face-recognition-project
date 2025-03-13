@@ -25,7 +25,8 @@ def detect_faces(frame):
         x, y, w, h = (detection.left(), detection.top(), detection.width(), detection.height())
         face = frame[y:y+h, x:x+w]
         face_vector = extract_features(frame, (x, y, w, h))
-        faces_set.append((face, (x, y, w, h), face_vector))
+        face_rgb = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+        faces_set.append((face_rgb, (x, y, w, h), face_vector))
 
     return faces_set
 
