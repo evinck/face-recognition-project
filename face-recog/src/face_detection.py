@@ -25,6 +25,10 @@ def detect_faces(frame):
         x, y, w, h = (detection.left(), detection.top(), detection.width(), detection.height())
         face = frame[y:y+h, x:x+w]
         face_vector = extract_features(frame, (x, y, w, h))
+        # This below is to fix a bug that I don't understand (yet ?) - sometimes face is None ?
+        if face is None:
+            print("face is None - strange !")
+            continue
         face_rgb = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
         faces_set.append((face_rgb, (x, y, w, h), face_vector))
 
