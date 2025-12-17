@@ -4,12 +4,8 @@ services:
       context: face-recog
       dockerfile: Dockerfile
     container_name: face_recognition_app
-    devices:
-      - /dev/video0:/dev/video0
-    environment:
-      - DISPLAY=:0
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
+    ports:
+      - "8843:88443"
 
   db:
     build: 

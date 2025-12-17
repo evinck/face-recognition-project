@@ -5,3 +5,4 @@ Pillow
 scikit-build
 opencv-python
 face_recognition
+gradio
