@@ -15,16 +15,18 @@ hog_face_detector = dlib.get_frontal_face_detector()
 
 # returns a list of tuples containing the face image, face rectangle and face vector
 def detect_faces(frame):
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame_np = np.array(frame)
+    #gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray_frame = frame.convert('L')
     
     # Use the Dlib HOG face detector
-    detections = hog_face_detector(gray_frame, 1)
+    detections = hog_face_detector(np.array(gray_frame), 1)
     
     faces_set = []
     for detection in detections:
         x, y, w, h = (detection.left(), detection.top(), detection.width(), detection.height())
-        face = frame[y:y+h, x:x+w]
-        face_vector = extract_features(frame, (x, y, w, h))
+        face = frame_np[y:y+h, x:x+w]
+        face_vector = extract_features(frame_np, (x, y, w, h))
         # This below is to fix a bug that I don't understand (yet ?) - sometimes face is None ?
         if face is None:
             print("face is None - strange !")

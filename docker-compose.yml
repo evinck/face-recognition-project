@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: face_recognition_app
     ports:
-      - "8843:88443"
+      - "8443:8443"
 
   db:
     build: 

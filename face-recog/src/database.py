@@ -13,7 +13,7 @@ class Database:
         try:
             self.connection = cx_Oracle.connect(
                 self.user, self.password, dsn="db:1521/FREEPDB1")
-            print("Database connection established.")
+            print("Database connection established.", flush=True)
         except cx_Oracle.DatabaseError as e:
             print(f"Error connecting to database: {e}")
 
