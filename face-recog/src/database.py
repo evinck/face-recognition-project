@@ -7,6 +7,9 @@ class Database:
         self.user = user
         self.password = password
         self.connection = None
+        # Important : cosine distance threshold for face matching
+        # Set between 0 and 2 (0 means identical vectors, 2 means opposite)
+        # A good value is around 0.1
         self.distance_threshold = 0.1
 
     def connect(self):

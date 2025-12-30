@@ -7,6 +7,15 @@ services:
     ports:
       - "8443:8443"
       - "8444:8444"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    devices:
+      - "nvidia.com/gpu=all"
 
   db:
     build: 

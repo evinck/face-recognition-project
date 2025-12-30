@@ -10,7 +10,7 @@ RUN  dnf -y install oracle-instantclient-release-23ai-el9 && \
 RUN dnf install -y yum-utils && \
     dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo && \
     dnf clean all
-RUN dnf -y install cuda-toolkit-12-3 && \
+RUN dnf -y install cuda-toolkit-13-0 cudnn9-cuda-13 && \
     dnf clean all       
 
 # Install development tools and other dependencies 
@@ -37,6 +37,22 @@ RUN dnf install -y python3-pip && \
     dnf clean all
 RUN python3 -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Special case for dlib to enable CUDA support
+# (As of today Dec 2025, the dlib pip package does not have CUDA support enabled by default)
+# (so wee need to build and install dlib from source)
+#
+# With podman-compose doesn't seem to work so to build the image :  
+# cd ./face-recog/ ; podman build --device nvidia.com/gpu=all -t face-recog-app .
+# or (better) podman compose --podman-build-args "--device nvidia.com/gpu=all" build app
+# ??
+RUN pip uninstall -y dlib && pip install setuptools
+RUN dnf install -y oracle-epel-release-el9 && dnf config-manager --set-enabled ol9_codeready_builder 
+RUN dnf install openblas-devel lapack-devel libX11-devel libjxl-devel libjpeg-turbo-devel lcms2-devel && dnf clean all
+RUN dnf install git -y && dnf clean all
+RUN git clone https://github.com/davisking/dlib.git
+RUN cd dlib && export DLIB_USE_CUDA=1 && export DUSE_AVX_INSTRUCTIONS=1 && pip install . 
+# RUN cd dlib && export DLIB_USE_CUDA=1 && export DUSE_AVX_INSTRUCTIONS=1 && export CMAKE_CUDA_ARCHITECTURES="86" && pip install .
 
 # Copy the rest of the application code
 RUN mkdir /app

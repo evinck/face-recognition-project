@@ -6,7 +6,7 @@ from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 import gradio as gr
 import logging
-
+import dlib
 
 def inference(input_img):
     output_img = input_img  # Placeholder for processed image
@@ -54,12 +54,16 @@ with gr.Blocks(title='Face Recognition Demo') as demo:
         with gr.Column():
             output_img = gr.Image(type='pil', label='Output Image',buttons=['fullscreen','download'], show_label=False)
 
-    dep = input_img.stream(inference, inputs=[input_img], outputs=[output_img], stream_every=0.1)
+    dep = input_img.stream(inference, inputs=[input_img], outputs=[output_img], stream_every=1)
+    # stream=0.5 doesn't work 
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-    logging.info("Starting Face Recognition Demo...")
+    logging.info("Starting Face Recognition Demo (webcam)...")
+
+    logging.debug("dlib.DLIB_USE_CUDA =" + str(dlib.DLIB_USE_CUDA)) # Must be True
+    logging.debug("dlib.cuda.get_num_devices() =" + str(dlib.cuda.get_num_devices())) # Must be > 0
 
     # Load configuration
     config = load_config()

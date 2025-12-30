@@ -22,7 +22,7 @@ def refresh_faces():
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-    logging.info("Starting Face Recognition Demo...")
+    logging.info("Starting Face Recognition Demo (dbutil)...")
 
     # Load configuration
     config = load_config()
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                             delete_btn = gr.Button("Delete Face", variant="stop")
                             delete_btn.click(fn=delete_face, inputs=[gr.State(face[0])], outputs=[faces_state])
 
-        update_faces_btn = gr.Button("Update Faces",variant="primary")
+        update_faces_btn = gr.Button("Refresh",variant="primary")
         update_faces_btn.click(fn=refresh_faces, inputs=[], outputs=[faces_state])
 
     # Launch the Gradio app
