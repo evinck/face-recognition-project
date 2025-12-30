@@ -25,8 +25,7 @@ class Database:
 
         cursor = self.connection.cursor()
         try:
-            cursor.execute(
-                "INSERT INTO faces (face_image, face_name, face_vector) VALUES (:1, :2, :3)", [pickle.dumps(face[0]), "Unknown", str(face[2].tolist())])
+            cursor.execute("INSERT INTO faces (face_image, face_name, face_vector) VALUES (:1, :2, :3)", [pickle.dumps(face[0]), "Unknown", str(face[2].tolist())])
             self.connection.commit()
             print("Face inserted successfully.")
         except cx_Oracle.DatabaseError as e:
@@ -43,7 +42,6 @@ class Database:
         cursor = self.connection.cursor()
         try:
             # Cosine Distance varies from 0 to 2, where 0 means the vectors are identical and 2 means they are opposite
-            result = None
             cursor.execute(""" 
                 SELECT face_name FROM faces 
                 WHERE VECTOR_DISTANCE(face_vector, :parameter_vector, COSINE) <= :distance_threshold
@@ -51,22 +49,27 @@ class Database:
                 ASC FETCH FIRST 1 ROW ONLY""", [str(face[2].tolist()), self.distance_threshold])
             row = cursor.fetchone()
             if row is not None:
-                result = row[0]
-            return result
+                return row[0]
+            else:
+                return None
         except cx_Oracle.DatabaseError as e:
             print(f"Error checking if face is in database: {e}")
         finally:
             cursor.close()
 
     # returns n (how_many) faces (id, name, image) from the database
-    def faces_from_database(self, how_many):
+    def faces_from_database(self, how_many=None):
         if self.connection is None:
             print("Database connection is not established.")
 
         cursor = self.connection.cursor()
         try:
-            cursor.execute(
-                "SELECT id, face_image, face_name FROM faces FETCH FIRST :1 ROWS ONLY", [how_many])
+            if how_many is None:
+                cursor.execute(
+                    "SELECT id, face_image, face_name FROM faces")
+            else:
+                cursor.execute(
+                    "SELECT id, face_image, face_name FROM faces FETCH FIRST :1 ROWS ONLY", [how_many])
             rows = cursor.fetchall()
             faces = []
             for row in rows:

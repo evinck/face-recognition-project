@@ -6,6 +6,7 @@ from datetime import datetime
 from PIL import Image, ImageDraw
 import gradio as gr
 import logging
+import pickle
 
 def update_face_name(id,new_name):
     database.update_face_name_in_database(face_id=id, new_name=new_name)
@@ -16,7 +17,7 @@ def delete_face(id):
     return refresh_faces()
 
 def refresh_faces():
-    return database.faces_from_database(10)
+    return database.faces_from_database()
   
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -44,8 +45,7 @@ if __name__ == '__main__':
         @gr.render(inputs=[faces_state])
         def display_faces(faces):
             for face in faces:
-                image_data = face[1]
-                image = Image.fromarray(image_data)
+                image= face[1]
                 with gr.Row():
                     with gr.Column():
                         gr.Image(value=image, height=200, width=200, buttons=['fullscreen'], show_label=False)
@@ -54,7 +54,7 @@ if __name__ == '__main__':
                         textbox.submit(fn=update_face_name, inputs=[gr.State(face[0]), textbox], outputs=[textbox])
                     with gr.Column():
                         with gr.Row():
-                            submit_btn = gr.Button("Submit",variant="primary")
+                            submit_btn = gr.Button("Update Name",variant="primary")
                             submit_btn.click(fn=update_face_name, inputs=[gr.State(face[0]), textbox], outputs=[textbox])
                         with gr.Row():
                             delete_btn = gr.Button("Delete Face", variant="stop")

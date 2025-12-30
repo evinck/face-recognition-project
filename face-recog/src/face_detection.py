@@ -1,6 +1,6 @@
-import cv2
 import numpy as np
 import dlib
+from PIL import Image
 
 # Load the pre-trained face recognition model from dlib
 face_rec_model_path = "models/dlib_face_recognition_resnet_model_v1.dat"
@@ -16,7 +16,6 @@ hog_face_detector = dlib.get_frontal_face_detector()
 # returns a list of tuples containing the face image, face rectangle and face vector
 def detect_faces(frame):
     frame_np = np.array(frame)
-    #gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray_frame = frame.convert('L')
     
     # Use the Dlib HOG face detector
@@ -31,7 +30,7 @@ def detect_faces(frame):
         if face is None:
             print("face is None - strange !")
             continue
-        face_rgb = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+        face_rgb = Image.fromarray(face)
         faces_set.append((face_rgb, (x, y, w, h), face_vector))
 
     return faces_set

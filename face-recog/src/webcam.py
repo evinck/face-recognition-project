@@ -11,6 +11,7 @@ import logging
 def inference(input_img):
     output_img = input_img  # Placeholder for processed image
 
+    # Detect faces in the input image
     faces = detect_faces(input_img)
 
     for face in faces:
@@ -49,9 +50,9 @@ with gr.Blocks(title='Face Recognition Demo') as demo:
     
     with gr.Row():
         with gr.Column():
-            input_img = gr.Image(type='pil', label='Input Image', sources=['webcam'], streaming=True)
+            input_img = gr.Image(type='pil', label='Input Image', sources=['webcam'], streaming=True,show_label=False)
         with gr.Column():
-            output_img = gr.Image(type='pil', label='Output Image')
+            output_img = gr.Image(type='pil', label='Output Image',buttons=['fullscreen','download'], show_label=False)
 
     dep = input_img.stream(inference, inputs=[input_img], outputs=[output_img], stream_every=0.1)
 
