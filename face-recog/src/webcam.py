@@ -1,9 +1,11 @@
+import sys
 from face_detection import detect_faces
 from utils import load_config
 from database import Database
 from datetime import datetime
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 import gradio as gr
+import logging
 
 
 def inference(input_img):
@@ -22,14 +24,17 @@ def inference(input_img):
             # Draw rectangles around detected face and write the name of the person
             x, y, w, h = face[1]
             if face_name == "Unknown":
-                pen_color = 'red'
+                pen_color = "red"
             else:
-                pen_color = 'green'
+                pen_color = "green"
 
             draw = ImageDraw.Draw(output_img)    
-            draw.rectangle([(x, y), (x+w, y+h)], outline=pen_color, width=2)
-            draw.text((x, y-10), text=str(face_name), fill=pen_color)   
-
+            width_size = 7
+            draw.rectangle([(x, y), (x+w, y+h)], outline=pen_color, width=width_size)
+            font_size=50
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size=font_size)
+            draw.text((x, y - font_size*1.2), text=str(face_name), fill=pen_color, font=font)
+            
     return output_img
 
 
@@ -47,13 +52,13 @@ with gr.Blocks(title='Face Recognition Demo') as demo:
             input_img = gr.Image(type='pil', label='Input Image', sources=['webcam'], streaming=True)
         with gr.Column():
             output_img = gr.Image(type='pil', label='Output Image')
-        with gr.Column():
-            button = gr.Button("Clean All")
 
     dep = input_img.stream(inference, inputs=[input_img], outputs=[output_img], stream_every=0.1)
 
 if __name__ == '__main__':
-    print("Starting Face Recognition Demo...",flush=True)
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+    logging.info("Starting Face Recognition Demo...")
 
     # Load configuration
     config = load_config()
@@ -62,8 +67,12 @@ if __name__ == '__main__':
     database = Database(config["database_config"]["username"], config["database_config"]["password"])
     database.connect()
 
+    # Gradio hides output sometimes, so we force flush here
+    sys.stdout.flush()
+
     # Launch the Gradio app
     demo.launch(debug=True, share=False, server_port=8443, server_name='0.0.0.0',
                 css=css,
                 root_path="/app", auth=("demo", "aicec"),
                 allowed_paths=["images/"])
+    

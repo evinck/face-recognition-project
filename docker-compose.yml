@@ -6,6 +6,7 @@ services:
     container_name: face_recognition_app
     ports:
       - "8443:8443"
+      - "8444:8444"
 
   db:
     build: 

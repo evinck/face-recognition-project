@@ -70,12 +70,11 @@ class Database:
             rows = cursor.fetchall()
             faces = []
             for row in rows:
-                # face = (row[0], pickle.loads(row[1]), row[2])
-                face = (row[0], row[2], pickle.loads(row[1].read()))
+                face = (row[0],  pickle.loads(row[1].read()), row[2])
                 faces.append(face)
             return faces      
         except cx_Oracle.DatabaseError as e:
-            print(f"Error inserting face: {e}")
+            print(f"Error fetching faces: {e}")
         finally:
             cursor.close()
 
@@ -92,7 +91,7 @@ class Database:
         finally:
             cursor.close()
 
-    def update_face_name(self, face_id, new_name):
+    def update_face_name_in_database(self, face_id, new_name):
         if self.connection is None:
             print("Database connection is not established.")
 
@@ -107,7 +106,7 @@ class Database:
         finally:
             cursor.close()
 
-    def delete_face(self, face_id):
+    def delete_face_from_database(self, face_id):
         if self.connection is None:
             print("Database connection is not established.")
 

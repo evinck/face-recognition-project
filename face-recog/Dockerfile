@@ -1,5 +1,11 @@
 FROM docker.io/oraclelinux:9
 
+
+# Install Oracle Instant Client
+RUN  dnf -y install oracle-instantclient-release-23ai-el9 && \
+     dnf -y install oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus && \
+     rm -rf /var/cache/dnf
+
 # Install CUDA
 RUN dnf install -y yum-utils && \
     dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo && \
@@ -37,5 +43,12 @@ RUN mkdir /app
 COPY src/ /app
 WORKDIR /app
 
-# Run the application
-CMD ["python3", "/app/main.py"]
+# Create placeholders for logs
+RUN mkdir /app/logs
+
+# Install supervisor
+RUN pip install supervisor
+COPY supervisord.conf /etc/supervisord.conf
+
+# Run the application using supervisord
+CMD ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]

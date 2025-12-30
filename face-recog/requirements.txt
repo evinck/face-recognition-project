@@ -3,3 +3,4 @@ opencv-python-headless
 face_recognition
 huggingface_hub
 gradio
+Pillow
