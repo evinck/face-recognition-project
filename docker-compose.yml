@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: face-recog
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.nogpu
     container_name: face_recognition_app
     ports:
       - "8443:8443"

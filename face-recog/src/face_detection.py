@@ -11,11 +11,15 @@ face_rec_model = dlib.face_recognition_model_v1(face_rec_model_path)
 shape_predictor_path = "models/shape_predictor_68_face_landmarks.dat"
 shape_predictor = dlib.shape_predictor(shape_predictor_path)
 
-# Load the Dlib HOG face detector
-#face_detector = dlib.get_frontal_face_detector()
-
-# Alternate face detector: CNN based (more accurate but slower - can run on GPU)
-face_detector = dlib.cnn_face_detection_model_v1("models/mmod_human_face_detector.dat")
+# Initialize the face detector based on whether dlib is using CUDA
+if dlib.DLIB_USE_CUDA:
+    # Use the CNN face detector (more accurate but slower - can run on GPU)
+    logging.info("Dlib is configured to use CUDA for GPU acceleration.")
+    face_detector = dlib.cnn_face_detection_model_v1("models/mmod_human_face_detector.dat")
+else:
+    # Use the Dlib HOG face detector
+    logging.info("Dlib is NOT configured to use CUDA. Running on CPU only.")
+    face_detector = dlib.get_frontal_face_detector()
 
 # returns a list of tuples containing the face image, face rectangle and face vector
 def detect_faces(frame):
