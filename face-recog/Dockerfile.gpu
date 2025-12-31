@@ -1,6 +1,5 @@
 FROM docker.io/oraclelinux:9
 
-
 # Install Oracle Instant Client
 RUN  dnf -y install oracle-instantclient-release-23ai-el9 && \
      dnf -y install oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus && \

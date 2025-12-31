@@ -24,13 +24,14 @@ else:
 # returns a list of tuples containing the face image, face rectangle and face vector
 def detect_faces(frame):
     frame_np = np.array(frame)
-    gray_frame = frame.convert('L')
+    # Convert the frame to grayscale for face detection
+    # gray_frame = frame.convert('L')
     
     # Use the face detector
     # The 1 in the second argument indicates that we should upsample the image
     # 1 time.  This will make everything bigger and allow us to detect more
     # faces.
-    detections = face_detector(np.array(gray_frame), 1)
+    detections = face_detector(frame_np, 1)
     
     logging.debug(f"Number of faces detected: {len(detections)}")
 

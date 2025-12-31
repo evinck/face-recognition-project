@@ -1,7 +1,6 @@
 import cx_Oracle
 import pickle
 
-
 class Database:
     def __init__(self, user, password):
         self.user = user
