@@ -1,6 +1,5 @@
 FROM docker.io/oraclelinux:9
 
-
 # Install Oracle Instant Client
 RUN  dnf -y install oracle-instantclient-release-23ai-el9 && \
      dnf -y install oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus && \
@@ -39,22 +38,6 @@ RUN dnf install -y python3-pip && \
     dnf clean all
 RUN python3 -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Special case for dlib to enable CUDA support
-# (As of today Dec 2025, the dlib pip package does not have CUDA support enabled by default)
-# (so wee need to build and install dlib from source)
-#
-# With podman-compose doesn't seem to work so to build the image :  
-# cd ./face-recog/ ; podman build --device nvidia.com/gpu=all -t face-recog-app .
-# or (better) podman compose --podman-build-args "--device nvidia.com/gpu=all" build app
-# ??
-RUN pip uninstall -y dlib && pip install setuptools
-RUN dnf install -y oracle-epel-release-el9 && dnf config-manager --set-enabled ol9_codeready_builder 
-RUN dnf install openblas-devel lapack-devel libX11-devel libjxl-devel libjpeg-turbo-devel lcms2-devel && dnf clean all
-RUN dnf install git -y && dnf clean all
-RUN git clone https://github.com/davisking/dlib.git
-RUN cd dlib && export DLIB_USE_CUDA=1 && export DUSE_AVX_INSTRUCTIONS=1 && pip install . 
-# RUN cd dlib && export DLIB_USE_CUDA=1 && export DUSE_AVX_INSTRUCTIONS=1 && export CMAKE_CUDA_ARCHITECTURES="86" && pip install .
 
 # Copy the rest of the application code
 RUN mkdir /app
