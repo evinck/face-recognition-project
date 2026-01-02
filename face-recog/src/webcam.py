@@ -6,7 +6,6 @@ from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 import gradio as gr
 import logging
-import dlib
 
 def inference(input_img):
     output_img = input_img  # Placeholder for processed image
@@ -18,12 +17,12 @@ def inference(input_img):
         face_name=database.face_is_in_database(face)
             
         if face_name is None:
-            # print("New face detected - inserting into database") 
+            logging.debug("New face detected - inserting into database") 
             database.insert_face_in_database(face)
         else:
-            # print("Face already in database - ", face_name)
+            logging.debug(f"Face already in database : {face_name}")
             # Draw rectangles around detected face and write the name of the person
-            x, y, w, h = face[1]
+            x, y, x2, y2 = face[1]
             if face_name == "Unknown":
                 pen_color = "red"
             else:
@@ -31,7 +30,7 @@ def inference(input_img):
 
             draw = ImageDraw.Draw(output_img)    
             width_size = 7
-            draw.rectangle([(x, y), (x+w, y+h)], outline=pen_color, width=width_size)
+            draw.rectangle([(x, y), (x2, y2)], outline=pen_color, width=width_size)
             font_size=50
             font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size=font_size)
             draw.text((x, y - font_size*1.2), text=str(face_name), fill=pen_color, font=font)
@@ -62,22 +61,19 @@ if __name__ == '__main__':
 
     logging.info("Starting Face Recognition Demo (webcam)...")
 
-    logging.debug("dlib.DLIB_USE_CUDA =" + str(dlib.DLIB_USE_CUDA)) # Must be True
-    logging.debug("dlib.cuda.get_num_devices() =" + str(dlib.cuda.get_num_devices())) # Must be > 0
-
     # Load configuration
     config = load_config()
 
     # Initialize the database
-    database = Database(config["database_config"]["username"], config["database_config"]["password"])
+    database = Database(config["database_config"]["username"], config["database_config"]["password"],config["database_config"]["ctx_string"])
     database.connect()
 
     # Gradio hides output sometimes, so we force flush here
     sys.stdout.flush()
 
     # Launch the Gradio app
-    demo.launch(debug=True, share=False, server_port=8443, server_name='0.0.0.0',
+    demo.launch(debug=True, share=False, server_port=9443, server_name='0.0.0.0',
                 css=css,
-                root_path="/app", auth=("demo", "aicec"),
+                root_path="/webcam", auth=("demo", "aicec"),
                 allowed_paths=["images/"])
     

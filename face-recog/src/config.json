@@ -1,6 +1,7 @@
 {
     "database_config": {
         "username": "FACEMASTER",
-        "password": "Welcome12345"
+        "password": "Welcome12345",
+        "ctx_string": "db:1521/FREEPDB1"
         }
 }

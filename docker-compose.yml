@@ -1,12 +1,11 @@
 services:
-  app:
+  webcam:
     build:
       context: face-recog
-      dockerfile: Dockerfile.gpu
-    container_name: face_recognition_app
+      dockerfile: Dockerfile-webcam-gpu
+    container_name: face_webcam
     ports:
-      - "8443:8443"
-      - "8444:8444"
+      - "9443:9443"
     deploy:
       resources:
         reservations:
@@ -16,6 +15,16 @@ services:
               capabilities: [gpu]
     devices:
       - "nvidia.com/gpu=all"
+    command: python3 webcam.py
+
+  dbutil:
+    build:
+      context: face-recog
+      dockerfile: Dockerfile-dbutil
+    container_name: face_dbutil
+    ports:
+      - "9444:9444"
+    command: python3 dbutil.py
 
   db:
     build: 

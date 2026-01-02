@@ -1,3 +1,5 @@
 cx_Oracle
+insightface
+onnxruntime-gpu[cuda,cudnn]
 gradio
 Pillow

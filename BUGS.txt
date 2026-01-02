@@ -1,3 +1,0 @@
-# the app build doesn't see the GPU 
-# it has to be forced this way : 
-podman compose --podman-build-args "--device nvidia.com/gpu=all" build app
