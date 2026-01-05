@@ -75,5 +75,9 @@ if __name__ == '__main__':
     demo.launch(debug=True, share=False, server_port=9443, server_name='0.0.0.0',
                 css=css,
                 root_path="/webcam", auth=("demo", "aicec"),
-                allowed_paths=["images/"])
+                allowed_paths=["images/"],
+                ssl_verify=False,
+                ssl_certfile="cert.pem",
+                ssl_keyfile="key.pem")
+
     
