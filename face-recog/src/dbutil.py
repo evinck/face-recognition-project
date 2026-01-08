@@ -66,7 +66,8 @@ if __name__ == '__main__':
         gr.set_static_paths(paths=["cont/images/"])
         #gr.HTML("<img src='cont/images/OSC.png'>")
         gr.Markdown("![](gradio_api/file=images/OSC.png)")
-        gr.Markdown("<center><h1>Face Recognition Demo</h1></center>")
+        gr.Markdown('<center><div style="width: 100%; background-color: #bf0000; padding: 10px; margin: -10px -10px 10px -10px;"><h2>GDPR compliance : this is a technical demo. We won\'t keep biometric data.</h2></div></center>')
+        gr.Markdown("<center><h1>Face Recognition Demo - Database utility</h1></center>")
     
 
         # Faces list
