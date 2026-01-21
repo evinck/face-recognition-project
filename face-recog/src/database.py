@@ -78,6 +78,7 @@ class Database:
             for row in rows:
                 face = (row[0],  pickle.loads(row[1].read()), row[2])
                 faces.append(face)
+            logging.debug(f"Fetched {len(faces)} faces from database.")
             return faces      
         except cx_Oracle.DatabaseError as e:
             logging.info(f"Error fetching faces: {e}")

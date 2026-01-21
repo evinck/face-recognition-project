@@ -69,25 +69,17 @@ if __name__ == '__main__':
         gr.Markdown('<center><div style="width: 100%; background-color: #bf0000; padding: 10px; margin: -10px -10px 10px -10px;"><h2>GDPR compliance : this is a technical demo. We won\'t keep biometric data.</h2></div></center>')
         gr.Markdown("<center><h1>Face Recognition Demo - Database utility</h1></center>")
     
-
         # Faces list
         faces_state = gr.State(refresh_faces())
         
-        # Headers : Dropdown + Refresh button + Delete button
-        # with gr.Row():
-        #     dropdown = gr.Dropdown(choices=["All Faces","Unknowns","Knowns"], value="All Faces", label="What faces to display", interactive=True)
-        #     dropdown.change(fn=dropdown_fn, inputs=[dropdown], outputs=[faces_state])
-        #     with gr.Row(variant="compact"):
-        #         update_faces_btn = gr.Button("Refresh",variant="primary")
-        #         update_faces_btn.click(fn=refresh_faces, inputs=[], outputs=[faces_state])
-        #         delete_faces_btn = gr.Button("Delete All",variant="primary",visible=delete_faces_btn_visible)
-        #         delete_faces_btn.click(fn=delete_faces, inputs=[], outputs=[faces_state])
-
         # Render faces
         @gr.render(inputs=[faces_state])
         def display_faces(faces):
             global face_choice
             global delete_faces_btn_visible
+
+            # Faces list
+            # faces_state = gr.State(refresh_faces())
 
             with gr.Row():
                 dropdown = gr.Dropdown(choices=["All Faces","Unknowns","Knowns"], value=face_choice, label="What faces to display", interactive=True)
